@@ -7,9 +7,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/points/:phone" element={<PointsPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path={process.env.PUBLIC_URL + "/"} element={<LoginPage />} />
+        <Route
+          path={process.env.PUBLIC_URL + "/points/:phone"}
+          element={<PointsPage />}
+        />
+        <Route
+          path={process.env.PUBLIC_URL + "/admin"}
+          element={<AdminPage />}
+        />
       </Routes>
     </Router>
   );
