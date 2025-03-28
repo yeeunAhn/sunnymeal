@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/sunnymeal/static/css/main.1ecdaa7e.css",
-    "main.js": "/sunnymeal/static/js/main.5653d45b.js",
+    "main.js": "/sunnymeal/static/js/main.94a9b813.js",
     "static/js/453.5798eaf1.chunk.js": "/sunnymeal/static/js/453.5798eaf1.chunk.js",
     "index.html": "/sunnymeal/index.html",
     "main.1ecdaa7e.css.map": "/sunnymeal/static/css/main.1ecdaa7e.css.map",
-    "main.5653d45b.js.map": "/sunnymeal/static/js/main.5653d45b.js.map",
+    "main.94a9b813.js.map": "/sunnymeal/static/js/main.94a9b813.js.map",
     "453.5798eaf1.chunk.js.map": "/sunnymeal/static/js/453.5798eaf1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1ecdaa7e.css",
-    "static/js/main.5653d45b.js"
+    "static/js/main.94a9b813.js"
   ]
 }
