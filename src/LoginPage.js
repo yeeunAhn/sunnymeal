@@ -41,7 +41,11 @@ export function LoginPage() {
     <div className="login-container">
       <div className="login-box">
         {/* 회사 로고 추가 */}
-        <img src="/logo.jpeg" alt="Company Logo" className="logo" />
+        <img
+          src={`${process.env.PUBLIC_URL}/logo.jpeg`}
+          alt="Company Logo"
+          className="logo"
+        />
         <h1 className="login-title">포인트 확인하기</h1>
         <form onSubmit={handleSubmit}>
           <input
