@@ -5,17 +5,11 @@ import AdminPage from "./AdminPage"; // default import 방식으로 수정
 
 function App() {
   return (
-    <Router>
+    <Router basename="process.env.PUBLIC_URL">
       <Routes>
-        <Route path={process.env.PUBLIC_URL + "/"} element={<LoginPage />} />
-        <Route
-          path={process.env.PUBLIC_URL + "/points/:phone"}
-          element={<PointsPage />}
-        />
-        <Route
-          path={process.env.PUBLIC_URL + "/admin"}
-          element={<AdminPage />}
-        />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/points/:phone" element={<PointsPage />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </Router>
   );
