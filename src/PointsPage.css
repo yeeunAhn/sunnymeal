@@ -1,0 +1,41 @@
+.points-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+}
+
+.points-box {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
+.points-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: rgb(223, 113, 159);
+}
+
+.points-info {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.points-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(223, 113, 159);
+}
+
+html,
+body {
+  height: 100%; /* 페이지 전체 높이를 설정 */
+  margin: 0; /* 기본 마진 제거 */
+  overflow: hidden; /* 스크롤 비활성화 */
+}

@@ -1,0 +1,175 @@
+/* AdminPage.css */
+
+/* 기본 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #f4f7fa;
+  color: #333;
+  overflow-y: auto; /* 세로 스크롤 활성화 */
+  padding: 20px;
+}
+
+/* 컨테이너 스타일 */
+.admin-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 헤더 스타일 */
+h1 {
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 테이블 스타일 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #555;
+}
+
+td {
+  font-size: 1rem;
+  color: #444;
+}
+
+/* 로딩 중 상태 */
+td[colspan="6"] {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #888;
+}
+
+/* 버튼 스타일 */
+button {
+  background-color: #d5006d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: rgb(246, 237, 239);
+}
+
+button:focus {
+  outline: none;
+}
+
+/* 주문 추가 폼 스타일 */
+form {
+  margin-top: 30px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  font-size: 1rem;
+  color: #555;
+  display: block;
+  margin-bottom: 5px;
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+form input:focus {
+  border-color: #ffb6c1;
+  outline: none;
+}
+
+form button[type="admin-submit"] {
+  background-color: #d5006d;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  border: none;
+  margin-top: 10px;
+}
+
+form button[type="admin-submit"]:hover {
+  background-color: #d5006d;
+}
+
+/* 날짜 선택기 */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.react-datepicker__input-container input:focus {
+  border-color: #ffb6c1;
+  outline: none;
+}
+
+/* 모바일 환경에서 키패드가 나타나면 화면이 자동으로 조정되도록 함 */
+html,
+body {
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+  height: 100%;
+}
+
+input,
+textarea,
+select {
+  font-size: 16px; /* 키패드 크기와 맞는 폰트 크기 */
+  line-height: 1.5;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  /* 모바일에서 입력 필드가 잘리지 않도록 여유 공간을 추가 */
+  .login-container {
+    padding-bottom: 20px; /* 화면 하단 여백 추가 */
+  }
+}
