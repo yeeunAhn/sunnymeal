@@ -93,7 +93,6 @@ function AdminPage() {
     setIsAddingOrder(!isAddingOrder);
   };
 
-  // 주문 추가 처리 함수
   const handleAddOrder = async (e) => {
     e.preventDefault();
 
@@ -109,7 +108,7 @@ function AdminPage() {
     try {
       // Firestore에 새로운 주문 추가
       const newOrder = {
-        date: date.toLocaleDateString("ko-KR"), // 날짜를 "yyyy.mm.dd." 형식으로 저장
+        date: date.toLocaleDateString("ko-KR"), // "yyyy.mm.dd." 형식으로 저장
         company,
         name,
         number,
@@ -120,6 +119,10 @@ function AdminPage() {
       await setDoc(doc(db, "point", number), newOrder); // 전화번호를 document ID로 사용하여 추가
 
       console.log("새로운 주문이 추가되었습니다.");
+
+      // ✅ 새 주문을 기존 리스트에 추가하여 UI 업데이트
+      setUsers((prevUsers) => [...prevUsers, { id: number, ...newOrder }]);
+
       setIsAddingOrder(false); // 폼 숨기기
       setFormData({
         date: new Date(),

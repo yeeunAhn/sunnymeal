@@ -26,12 +26,10 @@ export function LoginPage() {
     e.preventDefault();
     const trimmedPhone = phone.replace(/-/g, "").trim(); // 하이픈 제거 후 전화번호 처리
 
-    if (trimmedPhone.length === 10 || trimmedPhone.length === 11) {
-      if (trimmedPhone === "01053426521") {
-        navigate("/admin"); // 특정 번호는 관리자 페이지로 이동
-      } else {
-        navigate(`/points/${trimmedPhone}`); // 일반 사용자는 포인트 페이지로 이동
-      }
+    if (trimmedPhone === "0235") {
+      navigate("/admin"); // 특정 번호는 관리자 페이지로 이동
+    } else if (trimmedPhone.length === 10 || trimmedPhone.length === 11) {
+      navigate(`/points/${trimmedPhone}`); // 일반 사용자는 포인트 페이지로 이동
     } else {
       alert("올바른 전화번호를 입력하세요.");
     }
