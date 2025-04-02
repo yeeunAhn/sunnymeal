@@ -1,15 +1,18 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { LoginPage } from "./LoginPage";
 import { PointsPage } from "./PointsPage";
-import AdminPage from "./AdminPage"; // default import 방식으로 수정
+import { SignupPage } from "./SignupPage";
+import AdminPage from "./AdminPage"; // default import 방식
 
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/signup" element={<SignupPage />} />{" "}
+        {/* 회원가입 페이지 추가 */}
       </Routes>
     </Router>
   );

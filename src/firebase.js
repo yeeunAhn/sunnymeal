@@ -1,8 +1,8 @@
 // firebase.js
 
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore"; // Firestore import
 import { getAuth } from "firebase/auth"; // 인증을 사용하는 경우
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 // Firebase 설정
 const firebaseConfig = {
@@ -22,5 +22,4 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); // Firestore 객체 초기화
 const auth = getAuth(app); // 인증 객체 초기화 (선택 사항)
 
-// db와 auth 객체를 외부에서 사용할 수 있도록 export
-export { db, auth };
+export { db, auth, addDoc, collection, app };
