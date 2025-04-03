@@ -30,7 +30,7 @@ export function PointsPage() {
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           history.push({
-            date: new Date(data.date), // 문자열을 Date 객체로 변환
+            date: data.date,
             payment: data.payment,
             usedPoints: data.usedPoints,
           });
@@ -45,11 +45,6 @@ export function PointsPage() {
             totalUsedPoints += Number(data.usedPoints);
           }
         });
-
-        // 최신 날짜순 정렬 (내림차순)
-        history.sort((a, b) => b.date - a.date);
-
-        setOrderHistory(history);
 
         setRemainingPoints(totalEarnedPoints - totalUsedPoints);
         setOrderHistory(history);
@@ -96,9 +91,7 @@ export function PointsPage() {
                 <p className="history-description">
                   {order.payment > 0 ? "결제 적립" : "포인트 사용"}
                 </p>
-                <p className="history-date">
-                  {order.date.toLocaleDateString()}
-                </p>
+                <p className="history-date">{order.date}</p>
               </div>
               <p
                 className={`history-points ${
