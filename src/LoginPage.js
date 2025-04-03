@@ -12,17 +12,30 @@ export function LoginPage() {
   // 전화번호 입력 시 자동으로 하이픈 추가
   const handlePhoneChange = (e) => {
     const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
-    let formattedPhone = rawPhone;
+    let formattedPhone = "";
 
     if (rawPhone.length <= 3) {
       formattedPhone = rawPhone;
     } else if (rawPhone.length <= 6) {
-      formattedPhone = rawPhone.replace(/(\d{3})(\d{0,4})/, "$1-$2");
+      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(3)}`;
+    } else if (rawPhone.length <= 10) {
+      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+        3,
+        7
+      )}-${rawPhone.slice(7)}`;
     } else {
-      formattedPhone = rawPhone.replace(/(\d{3})(\d{4})(\d{0,4})/, "$1-$2-$3");
+      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+        3,
+        7
+      )}-${rawPhone.slice(7, 11)}`;
     }
 
-    setPhone(formattedPhone); // 포맷된 전화번호 상태에 저장
+    // 기존 입력 값보다 길이가 짧아지는 경우(즉, 백스페이스 사용 시)는 그냥 rawPhone을 그대로 사용
+    if (e.target.value.length < phone.length) {
+      setPhone(e.target.value);
+    } else {
+      setPhone(formattedPhone);
+    }
   };
 
   const handlePasswordChange = (e) => {
@@ -91,6 +104,7 @@ export function LoginPage() {
           </button>
           <button
             type="button"
+            
             onClick={handleSignUp}
             className="adminpage-signup-button"
           >

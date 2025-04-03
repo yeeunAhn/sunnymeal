@@ -65,8 +65,48 @@ td[colspan="6"] {
   color: #888;
 }
 
+/* 수정 & 삭제 버튼 그룹 */
+.button-group {
+  display: flex;
+  gap: 10px; /* 버튼 사이 간격 */
+}
+
+.edit-btn {
+  background-color: #d5006d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.delete-btn {
+  background-color: #d5006d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
 /* 버튼 스타일 */
-button {
+.add-order-btn {
+  background-color: #d5006d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.use-points-btn {
   background-color: #d5006d;
   color: #fff;
   border: none;
@@ -84,6 +124,31 @@ button:hover {
 
 button:focus {
   outline: none;
+}
+
+.submit-order-btn {
+  background-color: #d5006d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+/* 수정 완료 버튼 */
+.confirm-edit-btn {
+  background-color: #d5006d;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: background-color 0.3s;
 }
 
 /* 주문 추가 폼 스타일 */

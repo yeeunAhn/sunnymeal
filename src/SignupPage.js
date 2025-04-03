@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getFirestore, setDoc, doc } from "firebase/firestore"; // 필요한 함수들 추가
 import { app } from "./firebase";
 import "./SignupPage.css"; // 개별 CSS 파일
+import { getDoc } from "firebase/firestore";
 
 export function SignupPage() {
   const [phone, setPhone] = useState("");
@@ -15,17 +16,30 @@ export function SignupPage() {
   // 전화번호 입력 시 자동으로 하이픈 추가
   const handlePhoneChange = (e) => {
     const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
-    let formattedPhone = rawPhone;
+    let formattedPhone = "";
 
     if (rawPhone.length <= 3) {
       formattedPhone = rawPhone;
     } else if (rawPhone.length <= 6) {
-      formattedPhone = rawPhone.replace(/(\d{3})(\d{0,4})/, "$1-$2");
+      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(3)}`;
+    } else if (rawPhone.length <= 10) {
+      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+        3,
+        7
+      )}-${rawPhone.slice(7)}`;
     } else {
-      formattedPhone = rawPhone.replace(/(\d{3})(\d{4})(\d{0,4})/, "$1-$2-$3");
+      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+        3,
+        7
+      )}-${rawPhone.slice(7, 11)}`;
     }
 
-    setPhone(formattedPhone); // 포맷된 전화번호 상태에 저장
+    // 기존 입력 값보다 길이가 짧아지는 경우(즉, 백스페이스 사용 시)는 그냥 rawPhone을 그대로 사용
+    if (e.target.value.length < phone.length) {
+      setPhone(e.target.value);
+    } else {
+      setPhone(formattedPhone);
+    }
   };
 
   // 비밀번호 입력 처리
@@ -59,8 +73,14 @@ export function SignupPage() {
     }
 
     try {
-      // Firestore에 phone을 문서 ID로 설정
       const userRef = doc(db, "users", trimmedPhone); // 문서 ID를 전화번호로 설정
+      const userSnap = await getDoc(userRef); // 해당 전화번호가 이미 존재하는지 확인
+
+      if (userSnap.exists()) {
+        alert("이미 가입된 전화번호입니다.");
+        return;
+      }
+
       await setDoc(userRef, {
         phone: trimmedPhone,
         password: password,

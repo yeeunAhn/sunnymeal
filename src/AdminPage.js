@@ -1,184 +1,241 @@
-import React, { useEffect, useState } from "react";
-import { db } from "./firebase"; // firebase.js에서 db import
-import { collection, getDocs, setDoc, doc } from "firebase/firestore"; // Firestore에서 필요한 함수 임포트
-import DatePicker from "react-datepicker"; // 날짜 선택 라이브러리 import
-import "react-datepicker/dist/react-datepicker.css"; // 날짜 선택 CSS
-import "./AdminPage.css"; // 개별 CSS 파일
+import React, { useEffect, useState, useCallback } from "react";
+import { db } from "./firebase";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import OrderHistoryModal from "./OrderHistoryModal"; // 모달 컴포넌트 추가
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./AdminPage.css";
 
 function AdminPage() {
-  const [users, setUsers] = useState([]); // 상태 변수로 Firestore에서 가져올 데이터를 저장
+  const [users, setUsers] = useState([]);
+  const [selectedPhone, setSelectedPhone] = useState(null); //  전화번호
+  const [isAddingOrder, setIsAddingOrder] = useState(false); // 주문 추가
+  const [isUsingPoints, setIsUsingPoints] = useState(false); // 포인트 사용
   const [formData, setFormData] = useState({
-    date: new Date(), // 기본값은 현재 날짜
+    date: new Date(),
     company: "",
     name: "",
     number: "",
     payment: 0,
-  }); // 폼 데이터 상태
-
-  const [isAddingOrder, setIsAddingOrder] = useState(false); // 주문 추가 폼 보이기 여부
+  });
+  const [pointData, setPointData] = useState({
+    date: new Date(),
+    number: "",
+    usedPoints: 0,
+  });
 
   useEffect(() => {
-    // 데이터 가져오는 함수
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "point")); // "point" 컬렉션에서 데이터 가져오기
-        console.log("Firestore 데이터 가져오기 성공"); // 데이터 가져오기 성공 메시지
+        const querySnapshot = await getDocs(collection(db, "point"));
         const usersList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
 
-        // date 필드를 기준으로 오름차순으로 정렬
-        const sortedUsers = usersList.sort((a, b) => {
-          const formatDate = (date) => {
-            const [year, month, day] = date
-              .split(".")
-              .map((item) => item.trim());
-            return new Date(
-              `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
-            );
-          };
-
-          const dateA = formatDate(a.date); // 날짜 변환
-          const dateB = formatDate(b.date); // 날짜 변환
-
-          return dateA - dateB; // 오름차순 정렬 (최신 날짜가 하단)
-        });
-
-        console.log("Fetched and sorted users: ", sortedUsers); // 가져온 데이터 출력
-        setUsers(sortedUsers); // 가져온 데이터 상태에 저장
+        const sortedUsers = usersList.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
+        setUsers(sortedUsers);
       } catch (error) {
-        console.error("Error fetching users: ", error); // 에러 출력
+        console.error("Error fetching users: ", error);
       }
     };
 
-    fetchData(); // 페이지 로드 시 데이터 가져오기
+    fetchData();
   }, []);
 
-  // 숫자에 쉼표 추가하는 함수
-  const formatNumber = (num) => {
-    if (isNaN(num)) return num; // 숫자가 아닌 값은 그대로 반환
-    return Number(num).toLocaleString(); // 숫자로 변환 후 쉼표 추가
+  // 누적 포인트 계산 함수
+  const calculateTotalPoints = (phoneNumber) => {
+    return (
+      users
+        .filter((user) => user.number === phoneNumber) // 같은 전화번호 필터링
+        .reduce((sum, user) => sum + (Number(user.payment) || 0), 0) * 0.02
+    ); // 전체 합산 후 2% 적용
   };
 
-  // 전화번호에 하이픈 추가하는 함수
+  // 최신 주문일 계산 함수
+  const calculateLatestOrderDate = (phoneNumber) => {
+    // 결제 금액(payment)이 양수인 데이터만 필터링 (포인트 사용 기록 제외)
+    const orders = users.filter(
+      (user) => user.number === phoneNumber && Number(user.payment) > 0
+    );
+
+    if (orders.length === 0) return "주문 기록 없음";
+
+    // 최신 주문일 찾기
+    return orders.reduce((latest, order) =>
+      new Date(order.date) > new Date(latest.date) ? order : latest
+    ).date;
+  };
+
   const formatPhoneNumber = (phone) => {
-    const rawPhone = phone.replace(/\D/g, ""); // 숫자만 남기기
-    let formattedPhone = rawPhone;
-
-    if (rawPhone.length <= 3) {
-      formattedPhone = rawPhone;
-    } else if (rawPhone.length <= 6) {
-      formattedPhone = rawPhone.replace(/(\d{3})(\d{0,4})/, "$1-$2");
-    } else {
-      formattedPhone = rawPhone.replace(/(\d{3})(\d{4})(\d{0,4})/, "$1-$2-$3");
-    }
-
-    return formattedPhone;
+    const rawPhone = phone.replace(/\D/g, ""); // 숫자만 추출
+    if (rawPhone.length <= 3) return rawPhone;
+    if (rawPhone.length <= 7)
+      return rawPhone.replace(/(\d{3})(\d{1,4})/, "$1-$2");
+    return rawPhone.replace(/(\d{3})(\d{4})(\d{1,4})/, "$1-$2-$3");
   };
 
-  // 폼 데이터 입력 변경 함수
+  const toggleAddOrderForm = () => {
+    setIsAddingOrder(!isAddingOrder);
+  };
+
+  const toggleUsePointsForm = () => {
+    setIsUsingPoints(!isUsingPoints);
+    setIsAddingOrder(false);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // 날짜 선택 시 상태 업데이트
+  const handlePointInputChange = (e) => {
+    const { name, value } = e.target;
+    setPointData({ ...pointData, [name]: value });
+  };
+
   const handleDateChange = (date) => {
     setFormData({ ...formData, date });
   };
 
-  // "주문 추가하기" 버튼 클릭 시 폼 토글
-  const toggleAddOrderForm = () => {
-    setIsAddingOrder(!isAddingOrder);
+  const handlePointDateChange = (date) => {
+    setPointData({ ...pointData, date });
   };
 
-  const handleAddOrder = async (e) => {
+  const handleAddOrder = useCallback(
+    async (e) => {
+      e.preventDefault();
+
+      const { date, company, name, number, payment } = formData;
+
+      try {
+        const newOrder = {
+          date: date.toLocaleDateString("ko-KR"),
+          company,
+          name,
+          number,
+          payment,
+        };
+
+        const docRef = await addDoc(collection(db, "point"), newOrder);
+        setUsers((prevUsers) => [...prevUsers, { id: docRef.id, ...newOrder }]);
+
+        setIsAddingOrder(false);
+        setFormData({
+          date: new Date(),
+          company: "",
+          name: "",
+          number: "",
+          payment: 0,
+        });
+      } catch (error) {
+        console.error("주문 추가 중 오류 발생: ", error);
+      }
+    },
+    [formData, setUsers]
+  );
+
+  const handleUsePoints = async (e) => {
     e.preventDefault();
+    const { date, number, usedPoints } = pointData;
+    const totalPoints = calculateTotalPoints(number);
 
-    const { date, company, name, number, payment } = formData;
-
-    // 해당 전화번호의 사용자 찾기
-    const user = users.find((user) => user.number === number);
-    const existingPoints = user ? user.point : 0;
-
-    // 누적 포인트 계산: 기존 포인트 + 결제 금액의 2%
-    const newPoints = existingPoints + payment * 0.02;
+    if (usedPoints > totalPoints) {
+      alert("사용하려는 포인트가 보유한 포인트보다 많습니다.");
+      return;
+    }
 
     try {
-      // Firestore에 새로운 주문 추가
-      const newOrder = {
-        date: date.toLocaleDateString("ko-KR"), // "yyyy.mm.dd." 형식으로 저장
-        company,
-        name,
+      const newPointUsage = {
+        date: date.toLocaleDateString("ko-KR"),
         number,
-        payment,
-        point: newPoints,
+        payment: -usedPoints * 50, // 포인트 차감, 1P = 50원
       };
 
-      await setDoc(doc(db, "point", number), newOrder); // 전화번호를 document ID로 사용하여 추가
+      const docRef = await addDoc(collection(db, "point"), newPointUsage);
+      setUsers((prevUsers) => [
+        ...prevUsers,
+        { id: docRef.id, ...newPointUsage },
+      ]);
 
-      console.log("새로운 주문이 추가되었습니다.");
-
-      // ✅ 새 주문을 기존 리스트에 추가하여 UI 업데이트
-      setUsers((prevUsers) => [...prevUsers, { id: number, ...newOrder }]);
-
-      setIsAddingOrder(false); // 폼 숨기기
-      setFormData({
+      setIsUsingPoints(false);
+      setPointData({
         date: new Date(),
-        company: "",
-        name: "",
         number: "",
-        payment: 0,
-      }); // 폼 초기화
+        usedPoints: 0,
+      });
+
+      alert("포인트가 정상적으로 사용되었습니다.");
     } catch (error) {
-      console.error("주문 추가 중 오류 발생: ", error);
+      console.error("포인트 사용 중 오류 발생: ", error);
     }
   };
 
   return (
     <div className="admin-container">
-      <h1>관리자용 페이지</h1>
+      <h1>관리자 페이지</h1>
 
-      {/* 주문 목록 */}
       <table>
         <thead>
           <tr>
-            <th>주문일</th>
+            <th>최근 주문일</th>
             <th>상호명</th>
             <th>이름</th>
             <th>번호</th>
             <th>결제 금액</th>
-            <th>누적 포인트</th>
+            <th>누적포인트</th>
+            <th>관리</th>
           </tr>
         </thead>
         <tbody>
           {users.length === 0 ? (
             <tr>
-              <td colSpan="6">로딩 중...</td>
+              <td colSpan="7">로딩 중...</td>
             </tr>
           ) : (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.date}</td>
-                <td>{user.company}</td>
-                <td>{user.name}</td>
-                <td>{formatPhoneNumber(user.number)}</td>{" "}
-                {/* 전화번호 하이픈 추가 */}
-                <td>{formatNumber(user.payment)}</td> {/* 쉼표 추가 */}
-                <td>{formatNumber(user.point)}</td> {/* 쉼표 추가 */}
-              </tr>
-            ))
+            [...new Set(users.map((user) => user.number))].map((phone) => {
+              const firstUser = users.find((user) => user.number === phone);
+              return (
+                <tr key={firstUser.id}>
+                  <td>{calculateLatestOrderDate(firstUser.number)}</td>{" "}
+                  {/* 최신 주문일 표시 */}
+                  <td>{firstUser.company}</td>
+                  <td>{firstUser.name}</td>
+                  <td>{formatPhoneNumber(firstUser.number)}</td>
+                  <td>{Number(firstUser.payment).toLocaleString()} 원</td>
+                  <td>
+                    {calculateTotalPoints(firstUser.number).toLocaleString()} P
+                  </td>
+                  <td>
+                    <button onClick={() => setSelectedPhone(firstUser.number)}>
+                      전체 주문보기
+                    </button>
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>
 
-      {/* 주문 추가 버튼 */}
-      <button onClick={toggleAddOrderForm}>
-        {isAddingOrder ? "취소" : "주문 추가하기"}
-      </button>
+      <div className="button-group">
+        <button className="add-order-btn" onClick={toggleAddOrderForm}>
+          {isAddingOrder ? "취소" : "주문 추가하기"}
+        </button>
+        <button className="use-points-btn" onClick={toggleUsePointsForm}>
+          {isUsingPoints ? "취소" : "포인트 사용하기"}
+        </button>
+      </div>
 
-      {/* 주문 추가 폼 */}
       {isAddingOrder && (
         <form onSubmit={handleAddOrder}>
           <div>
@@ -230,8 +287,55 @@ function AdminPage() {
               required
             />
           </div>
-          <button type="admin-submit">주문 추가</button>
+          <button className="submit-order-btn" type="submit">
+            주문 추가
+          </button>
         </form>
+      )}
+
+      {isUsingPoints && (
+        <form onSubmit={handleUsePoints}>
+          <div>
+            <label>사용일: </label>
+            <DatePicker
+              selected={pointData.date}
+              onChange={handlePointDateChange}
+              dateFormat="yyyy.MM.dd"
+              required
+            />
+          </div>
+          <div>
+            <label>전화번호: </label>
+            <input
+              type="text"
+              name="number"
+              value={pointData.number}
+              onChange={handlePointInputChange}
+              required
+            />
+          </div>
+          <div>
+            <label>사용 포인트: </label>
+            <input
+              type="number"
+              name="usedPoints"
+              value={pointData.usedPoints}
+              onChange={handlePointInputChange}
+              required
+            />
+          </div>
+          <button type="submit">포인트 사용</button>
+        </form>
+      )}
+
+      {/* 전체 주문 모달 창 */}
+      {selectedPhone && (
+        <OrderHistoryModal
+          phoneNumber={selectedPhone}
+          users={users}
+          setUsers={setUsers}
+          onClose={() => setSelectedPhone(null)}
+        />
       )}
     </div>
   );
