@@ -16,6 +16,9 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
     setEditFormData({
       ...order,
       date: new Date(order.date), // 문자열을 Date 객체로 변환
+      usedPoints: order.payment
+        ? Math.floor(Math.abs(order.payment) * 0.02)
+        : 0, // 🔥 현재 결제 금액 * 2%
     });
   };
 
@@ -38,7 +41,8 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
         date: editFormData.date.toLocaleDateString("ko-KR"), // 날짜 포맷 변경
         company: editFormData.company,
         name: editFormData.name,
-        payment: editFormData.payment,
+        payment: Number(editFormData.payment), // 결제 금액
+        usedPoints: Number(editFormData.usedPoints), // 차감 포인트 추가
       });
 
       // 화면에서도 즉시 반영
@@ -53,9 +57,11 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
       console.error("주문 수정 오류:", error);
     }
   };
-
-  // Firestore에서 주문 삭제
+  // 주문삭제
   const handleDeleteOrder = async (orderId) => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return; // 사용자가 취소하면 함수 종료
+
     try {
       await deleteDoc(doc(db, "point", orderId));
 
@@ -81,6 +87,7 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
               <th>상호명</th>
               <th>이름</th>
               <th>결제 금액</th>
+              <th>포인트</th> {/* ✅ 새로 추가 */}
               <th>관리</th>
             </tr>
           </thead>
@@ -113,13 +120,31 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
                       />
                     </td>
                     <td>
-                      <input
-                        type="number"
-                        name="payment"
-                        value={editFormData.payment}
-                        onChange={handleInputChange}
-                      />
-                    </td>
+                      {order.payment > 0 ? (
+                        <input
+                          type="number"
+                          name="payment"
+                          value={editFormData.payment}
+                          onChange={handleInputChange}
+                        />
+                      ) : (
+                        "-"
+                      )}
+                    </td>{" "}
+                    {/* ✅ 결제 금액이 양수일 때만 수정 가능, 음수면 "-" */}
+                    <td>
+                      {order.payment < 0 ? (
+                        <input
+                          type="number"
+                          name="usedPoints"
+                          value={editFormData.usedPoints}
+                          onChange={handleInputChange}
+                        />
+                      ) : (
+                        "-"
+                      )}
+                    </td>{" "}
+                    {/* ✅ 결제 금액이 음수일 때만 수정 가능, 양수면 "-" */}
                     <td>
                       <button className="save-btn" onClick={handleUpdateOrder}>
                         저장
@@ -135,10 +160,27 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
                 ) : (
                   <>
                     <td>{new Date(order.date).toLocaleDateString("ko-KR")}</td>
-
                     <td>{order.company}</td>
                     <td>{order.name}</td>
-                    <td>{Number(order.payment).toLocaleString()} 원</td>
+                    <td>
+                      {order.payment > 0
+                        ? `${Number(order.payment).toLocaleString()} 원`
+                        : "-"}
+                    </td>{" "}
+                    {/* ✅ 결제 금액이 양수면 정상 표시, 음수면 "-" */}
+                    <td>
+                      {order.payment < 0
+                        ? `-${
+                            order.usedPoints
+                              ? order.usedPoints.toLocaleString()
+                              : (
+                                  Math.abs(order.payment) * 0.02
+                                ).toLocaleString()
+                          }P`
+                        : `+${(order.payment * 0.02).toLocaleString()}P`}
+                    </td>{" "}
+                    {/* ✅ 결제 금액이 양수면 +포인트, 음수면 -포인트 */}
+                    {/* ✅ 결제 금액이 음수면 "-차감포인트" 표시, 양수면 "-" */}
                     <td>
                       <button
                         className="orderhistory-edit-btn"
