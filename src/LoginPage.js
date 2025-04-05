@@ -74,40 +74,49 @@ export function LoginPage() {
   const handleSignUp = () => {
     navigate("/signup"); // 회원가입 페이지로 이동
   };
+  // 아이디비번찾기
+  const handleFindAccount = () => {
+    navigate("/findaccount"); // 경로는 원하는 대로 설정
+  };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.jpeg`}
-          alt="Company Logo"
-          className="logo"
-        />
-        <h1 className="login-title">포인트 확인하기</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="전화번호 입력"
-            value={phone}
-            onChange={handlePhoneChange} // 전화번호 입력 시 자동 포맷 적용
-            className="login-input-1"
-          />
-          <input
-            type="password" // 비밀번호 입력
-            placeholder="비밀번호 입력"
-            value={password}
-            onChange={handlePasswordChange} // 비밀번호 입력
-            className="login-input-2"
-          />
-          <button type="submit" className="adminpage-login-button">
+        <div className="login-icon">
+          <img src={`${process.env.PUBLIC_URL}/logo.jpeg`} alt="Logo" />
+          <h1 className="login-subtitle">포인트 확인하기</h1>
+        </div>
+
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="login-input-group">
+            <input
+              type="text"
+              placeholder="phone"
+              value={phone}
+              onChange={handlePhoneChange}
+            />
+          </div>
+          <div className="login-input-group">
+            <input
+              type="password"
+              placeholder="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </div>
+
+          <button type="submit" className="login-btn">
             로그인
           </button>
-          <button
-            type="button"
-            
-            onClick={handleSignUp}
-            className="adminpage-signup-button"
-          >
+
+          <div className="login-options">
+            <span className="forgot-password" onClick={handleFindAccount}>
+              비밀번호 찾기
+            </span>
+          </div>
+
+          <span className="signup-link">not a member?</span>
+          <button type="button" className="signup-btn" onClick={handleSignUp}>
             회원가입
           </button>
         </form>

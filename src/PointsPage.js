@@ -60,17 +60,12 @@ export function PointsPage() {
   return (
     <div className="points-container">
       <div className="points-box">
-        {/* 상단 로고 */}
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.jpeg`}
-          alt="Company Logo"
-          className="logo"
-        />
-
-        {/* 포인트 확인 타이틀 */}
-        <h1 className="points-title">
-          {formatPhoneNumber(phone)} 님, 안녕하세요!
-        </h1>
+        <div className="points-icon">
+          <img src={`${process.env.PUBLIC_URL}/logo.jpeg`} alt="Logo" />
+          <h1 className="points-title">
+            {formatPhoneNumber(phone)} 님, 안녕하세요!
+          </h1>
+        </div>
 
         {/* 보유 포인트 */}
         <div className="points-balance">

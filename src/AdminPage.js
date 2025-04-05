@@ -203,21 +203,37 @@ function AdminPage() {
             </tr>
           ) : (
             [...new Set(users.map((user) => user.number))].map((phone) => {
-              const firstUser = users.find((user) => user.number === phone);
+              const userOrders = users.filter((user) => user.number === phone);
+
+              // 가장 최신 날짜의 주문 정보 가져오기
+              const latestOrder = userOrders.reduce((latest, current) =>
+                new Date(current.date) > new Date(latest.date)
+                  ? current
+                  : latest
+              );
+
+              const isPointUsage = Number(latestOrder.payment) < 0;
+
               return (
-                <tr key={firstUser.id}>
-                  <td>{calculateLatestOrderDate(firstUser.number)}</td>{" "}
-                  {/* 최신 주문일 표시 */}
-                  <td>{firstUser.company}</td>
-                  <td>{firstUser.name}</td>
-                  <td>{formatPhoneNumber(firstUser.number)}</td>
-                  <td>{Number(firstUser.payment).toLocaleString()} 원</td>
+                <tr key={latestOrder.id}>
+                  <td>{latestOrder.date}</td>
+                  <td>{latestOrder.company}</td>
+                  <td>{latestOrder.name}</td>
+                  <td>{formatPhoneNumber(latestOrder.number)}</td>
                   <td>
-                    {calculateTotalPoints(firstUser.number).toLocaleString()} P
+                    {isPointUsage
+                      ? "-"
+                      : Number(latestOrder.payment).toLocaleString() + " 원"}
                   </td>
                   <td>
-                    <button onClick={() => setSelectedPhone(firstUser.number)}>
-                      전체 주문보기
+                    {calculateTotalPoints(latestOrder.number).toLocaleString()}{" "}
+                    P
+                  </td>
+                  <td>
+                    <button
+                      onClick={() => setSelectedPhone(latestOrder.number)}
+                    >
+                      더보기
                     </button>
                   </td>
                 </tr>

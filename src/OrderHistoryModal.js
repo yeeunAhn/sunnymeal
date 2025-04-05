@@ -10,15 +10,42 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
   const [editingOrderId, setEditingOrderId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
 
+  // 날짜 문자열을 Date 객체로 변환하는 함수
+  const parseKoreanDate = (dateString) => {
+    if (typeof dateString === "string") {
+      const cleaned = dateString
+        .replace(/\./g, "-")
+        .replace(/\s/g, "")
+        .slice(0, -1); // "2025. 4. 3." → "2025-4-3"
+      return new Date(cleaned);
+    } else if (dateString instanceof Date) {
+      return dateString;
+    } else {
+      return new Date(); // fallback
+    }
+  };
+
   // 수정 버튼 클릭 시 실행되는 함수
   const handleEditClick = (order) => {
+    const parseToDate = (date) => {
+      if (typeof date === "string") {
+        // 예: "2025. 4. 3." → "2025-04-03"
+        const cleaned = date
+          .replace(/\./g, "-")
+          .replace(/\s/g, "")
+          .slice(0, -1); // 맨 끝 점 제거
+        return new Date(cleaned);
+      }
+      return date instanceof Date ? date : new Date(); // fallback
+    };
+
     setEditingOrderId(order.id);
     setEditFormData({
       ...order,
-      date: new Date(order.date), // 문자열을 Date 객체로 변환
+      date: parseKoreanDate(order.date), // 🔥 오류 방지
       usedPoints: order.payment
         ? Math.floor(Math.abs(order.payment) * 0.02)
-        : 0, // 🔥 현재 결제 금액 * 2%
+        : 0,
     });
   };
 
@@ -159,7 +186,9 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
                   </>
                 ) : (
                   <>
-                    <td>{new Date(order.date).toLocaleDateString("ko-KR")}</td>
+                    <td>
+                      {parseKoreanDate(order.date).toLocaleDateString("ko-KR")}
+                    </td>
                     <td>{order.company}</td>
                     <td>{order.name}</td>
                     <td>

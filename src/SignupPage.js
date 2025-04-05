@@ -98,36 +98,42 @@ export function SignupPage() {
     <div className="signup-container">
       <div className="signup-box">
         {/* 회사 로고 추가 */}
-        <img
-          src={`${process.env.PUBLIC_URL}/logo.jpeg`}
-          alt="Company Logo"
-          className="logo"
-        />
-        <h1 className="signup-title">회원가입</h1>
-        <form onSubmit={handleSignup}>
-          <input
-            type="text"
-            placeholder="전화번호 입력"
-            value={phone}
-            onChange={handlePhoneChange}
-            className="signup-input-1"
-          />
-          <input
-            type="password"
-            placeholder="비밀번호 (6자리)"
-            value={password}
-            onChange={handlePasswordChange}
-            className="signup-input-2"
-            maxLength="6"
-          />
-          <input
-            type="password"
-            placeholder="비밀번호 확인 (6자리)"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            className="signup-input-3"
-            maxLength="6"
-          />
+
+        <div className="signup-icon">
+          <img src={`${process.env.PUBLIC_URL}/logo.jpeg`} alt="Logo" />
+          <h1 className="login-subtitle">회원가입</h1>
+        </div>
+
+        <form onSubmit={handleSignup} className="signup-form">
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="전화번호 입력"
+              value={phone}
+              onChange={handlePhoneChange}
+              className="signup-input"
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="비밀번호 (6자리)"
+              value={password}
+              onChange={handlePasswordChange}
+              className="signup-input"
+              maxLength="6"
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="비밀번호 확인 (6자리)"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+              className="signup-input"
+              maxLength="6"
+            />
+          </div>
           <button type="submit" className="signup-button">
             가입하기
           </button>
