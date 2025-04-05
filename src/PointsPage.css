@@ -10,14 +10,13 @@
 /* 박스 스타일 */
 .points-box {
   background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 40px 30px;
+  border-radius: 20px;
+
   text-align: center;
-  width: 90%;
-  max-width: 500px;
-  min-width: 320px;
-  overflow: auto;
+  width: 330px;
+  overflow-y: auto;
+  margin-top: 30vh;
 }
 
 .points-icon img {
@@ -33,6 +32,12 @@
   margin-bottom: 10px;
   margin-top: 15px;
   color: #333;
+}
+/* ✅ 모바일 화면 (최대 480px)에서 글자 크기 줄이기 */
+@media (max-width: 480px) {
+  .points-title {
+    font-size: 18px;
+  }
 }
 
 /* 포인트 잔액 */

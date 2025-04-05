@@ -1,10 +1,23 @@
-/* AdminPage.css */
-
 /* 기본 스타일 */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* 모바일에서 테이블 가로 스크롤 가능하게 */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* 스크롤이 필요한 경우에만 나타나도록 */
+.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
 }
 
 body {
@@ -95,27 +108,39 @@ td[colspan="6"] {
 
 /* 버튼 스타일 */
 .add-order-btn {
+  padding: 12px;
   background-color: #d5006d;
-  color: #fff;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 5px;
-  margin-top: 20px;
-  transition: background-color 0.3s;
+  margin-top: 10px;
 }
 
 .use-points-btn {
+  padding: 12px;
   background-color: #d5006d;
-  color: #fff;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 5px;
-  margin-top: 20px;
-  transition: background-color 0.3s;
+  margin-top: 10px;
+}
+
+.use-points-btn-2 {
+  padding: 12px;
+  background-color: #d5006d;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 button:hover {
@@ -127,15 +152,15 @@ button:focus {
 }
 
 .submit-order-btn {
+  padding: 12px;
   background-color: #d5006d;
-  color: #fff;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 5px;
-  margin-top: 20px;
-  transition: background-color 0.3s;
+  margin-top: 10px;
 }
 
 /* 수정 완료 버튼 */

@@ -1,23 +1,23 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { db } from "./firebase";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
-import OrderHistoryModal from "./OrderHistoryModal"; // 모달 컴포넌트 추가
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import OrderHistoryModal from "./OrderHistoryModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./AdminPage.css";
 
+// 날짜 포맷 함수
+const formatDate = (date) => {
+  const tzOffset = date.getTimezoneOffset() * 60000; // ms
+  const localDate = new Date(date.getTime() - tzOffset);
+  return localDate.toISOString().split("T")[0].replace(/-/g, ".");
+};
+
 function AdminPage() {
   const [users, setUsers] = useState([]);
-  const [selectedPhone, setSelectedPhone] = useState(null); //  전화번호
-  const [isAddingOrder, setIsAddingOrder] = useState(false); // 주문 추가
-  const [isUsingPoints, setIsUsingPoints] = useState(false); // 포인트 사용
+  const [selectedPhone, setSelectedPhone] = useState(null);
+  const [isAddingOrder, setIsAddingOrder] = useState(false);
+  const [isUsingPoints, setIsUsingPoints] = useState(false);
   const [formData, setFormData] = useState({
     date: new Date(),
     company: "",
@@ -40,9 +40,10 @@ function AdminPage() {
           ...doc.data(),
         }));
 
-        const sortedUsers = usersList.sort(
-          (a, b) => new Date(a.date) - new Date(b.date)
-        );
+        const sortedUsers = usersList.sort((a, b) => {
+          return new Date(a.date) - new Date(b.date);
+        });
+
         setUsers(sortedUsers);
       } catch (error) {
         console.error("Error fetching users: ", error);
@@ -52,32 +53,16 @@ function AdminPage() {
     fetchData();
   }, []);
 
-  // 누적 포인트 계산 함수
   const calculateTotalPoints = (phoneNumber) => {
     return (
       users
-        .filter((user) => user.number === phoneNumber) // 같은 전화번호 필터링
+        .filter((user) => user.number === phoneNumber)
         .reduce((sum, user) => sum + (Number(user.payment) || 0), 0) * 0.02
-    ); // 전체 합산 후 2% 적용
-  };
-
-  // 최신 주문일 계산 함수
-  const calculateLatestOrderDate = (phoneNumber) => {
-    // 결제 금액(payment)이 양수인 데이터만 필터링 (포인트 사용 기록 제외)
-    const orders = users.filter(
-      (user) => user.number === phoneNumber && Number(user.payment) > 0
     );
-
-    if (orders.length === 0) return "주문 기록 없음";
-
-    // 최신 주문일 찾기
-    return orders.reduce((latest, order) =>
-      new Date(order.date) > new Date(latest.date) ? order : latest
-    ).date;
   };
 
   const formatPhoneNumber = (phone) => {
-    const rawPhone = phone.replace(/\D/g, ""); // 숫자만 추출
+    const rawPhone = phone.replace(/\D/g, "");
     if (rawPhone.length <= 3) return rawPhone;
     if (rawPhone.length <= 7)
       return rawPhone.replace(/(\d{3})(\d{1,4})/, "$1-$2");
@@ -119,11 +104,11 @@ function AdminPage() {
 
       try {
         const newOrder = {
-          date: date.toLocaleDateString("ko-KR"),
+          date: formatDate(date),
           company,
           name,
           number,
-          payment,
+          payment: Number(payment),
         };
 
         const docRef = await addDoc(collection(db, "point"), newOrder);
@@ -156,9 +141,9 @@ function AdminPage() {
 
     try {
       const newPointUsage = {
-        date: date.toLocaleDateString("ko-KR"),
+        date: formatDate(date),
         number,
-        payment: -usedPoints * 50, // 포인트 차감, 1P = 50원
+        payment: -usedPoints * 50,
       };
 
       const docRef = await addDoc(collection(db, "point"), newPointUsage);
@@ -182,66 +167,68 @@ function AdminPage() {
 
   return (
     <div className="admin-container">
-      <h1>관리자 페이지</h1>
-
-      <table>
-        <thead>
-          <tr>
-            <th>최근 주문일</th>
-            <th>상호명</th>
-            <th>이름</th>
-            <th>번호</th>
-            <th>결제 금액</th>
-            <th>누적포인트</th>
-            <th>관리</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.length === 0 ? (
+      <h1>주문 관리</h1>
+      <div className="table-wrapper">
+        <table>
+          <thead>
             <tr>
-              <td colSpan="7">로딩 중...</td>
+              <th>최근 주문일</th>
+              <th>상호명</th>
+              <th>이름</th>
+              <th>번호</th>
+              <th>결제 금액</th>
+              <th>누적포인트</th>
+              <th>관리</th>
             </tr>
-          ) : (
-            [...new Set(users.map((user) => user.number))].map((phone) => {
-              const userOrders = users.filter((user) => user.number === phone);
+          </thead>
+          <tbody>
+            {users.length === 0 ? (
+              <tr>
+                <td colSpan="7">로딩 중...</td>
+              </tr>
+            ) : (
+              [...new Set(users.map((user) => user.number))].map((phone) => {
+                const userOrders = users.filter(
+                  (user) => user.number === phone
+                );
+                const latestOrder = userOrders.reduce((latest, current) =>
+                  new Date(current.date) > new Date(latest.date)
+                    ? current
+                    : latest
+                );
+                const isPointUsage = Number(latestOrder.payment) < 0;
 
-              // 가장 최신 날짜의 주문 정보 가져오기
-              const latestOrder = userOrders.reduce((latest, current) =>
-                new Date(current.date) > new Date(latest.date)
-                  ? current
-                  : latest
-              );
-
-              const isPointUsage = Number(latestOrder.payment) < 0;
-
-              return (
-                <tr key={latestOrder.id}>
-                  <td>{latestOrder.date}</td>
-                  <td>{latestOrder.company}</td>
-                  <td>{latestOrder.name}</td>
-                  <td>{formatPhoneNumber(latestOrder.number)}</td>
-                  <td>
-                    {isPointUsage
-                      ? "-"
-                      : Number(latestOrder.payment).toLocaleString() + " 원"}
-                  </td>
-                  <td>
-                    {calculateTotalPoints(latestOrder.number).toLocaleString()}{" "}
-                    P
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => setSelectedPhone(latestOrder.number)}
-                    >
-                      더보기
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+                return (
+                  <tr key={latestOrder.id}>
+                    <td>{latestOrder.date}</td>
+                    <td>{latestOrder.company || "-"}</td>
+                    <td>{latestOrder.name || "-"}</td>
+                    <td>{formatPhoneNumber(latestOrder.number)}</td>
+                    <td>
+                      {isPointUsage
+                        ? "-"
+                        : Number(latestOrder.payment).toLocaleString() + " 원"}
+                    </td>
+                    <td>
+                      {calculateTotalPoints(
+                        latestOrder.number
+                      ).toLocaleString()}{" "}
+                      P
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => setSelectedPhone(latestOrder.number)}
+                      >
+                        더보기
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="button-group">
         <button className="add-order-btn" onClick={toggleAddOrderForm}>
@@ -340,11 +327,12 @@ function AdminPage() {
               required
             />
           </div>
-          <button type="submit">포인트 사용</button>
+          <button type="submit" className="use-points-btn-2">
+            포인트 사용
+          </button>
         </form>
       )}
 
-      {/* 전체 주문 모달 창 */}
       {selectedPhone && (
         <OrderHistoryModal
           phoneNumber={selectedPhone}

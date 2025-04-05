@@ -6,24 +6,36 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./OrderHistoryModal.css";
 
 function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
-  const userOrders = users.filter((user) => user.number === phoneNumber);
-  const [editingOrderId, setEditingOrderId] = useState(null);
-  const [editFormData, setEditFormData] = useState({});
-
-  // 날짜 문자열을 Date 객체로 변환하는 함수
   const parseKoreanDate = (dateString) => {
     if (typeof dateString === "string") {
-      const cleaned = dateString
-        .replace(/\./g, "-")
-        .replace(/\s/g, "")
-        .slice(0, -1); // "2025. 4. 3." → "2025-4-3"
-      return new Date(cleaned);
+      // "2025. 4. 3." 또는 "2025.04.03." 형태
+      const parts = dateString
+        .trim()
+        .replace(/\.$/, "") // 마지막 점 제거
+        .split(".");
+
+      if (parts.length === 3) {
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // JS 월은 0부터 시작
+        const day = parseInt(parts[2], 10);
+        return new Date(year, month, day);
+      }
     } else if (dateString instanceof Date) {
       return dateString;
-    } else {
-      return new Date(); // fallback
     }
+
+    return new Date(); // fallback
   };
+  const userOrders = users
+    .filter((user) => user.number === phoneNumber)
+    .sort((a, b) => {
+      const dateA = parseKoreanDate(a.date);
+      const dateB = parseKoreanDate(b.date);
+      return dateA - dateB; // 오래된 날짜 순
+    });
+
+  const [editingOrderId, setEditingOrderId] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
 
   // 수정 버튼 클릭 시 실행되는 함수
   const handleEditClick = (order) => {
@@ -42,7 +54,7 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
     setEditingOrderId(order.id);
     setEditFormData({
       ...order,
-      date: parseKoreanDate(order.date), // 🔥 오류 방지
+      date: parseKoreanDate(order.date), // 고친 함수 사용
       usedPoints: order.payment
         ? Math.floor(Math.abs(order.payment) * 0.02)
         : 0,
@@ -65,11 +77,11 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
     try {
       const orderRef = doc(db, "point", editingOrderId);
       await updateDoc(orderRef, {
-        date: editFormData.date.toLocaleDateString("ko-KR"), // 날짜 포맷 변경
+        date: editFormData.date.toLocaleDateString("ko-KR"),
         company: editFormData.company,
         name: editFormData.name,
-        payment: Number(editFormData.payment), // 결제 금액
-        usedPoints: Number(editFormData.usedPoints), // 차감 포인트 추가
+        payment: Number(editFormData.payment),
+        usedPoints: Math.abs(Number(editFormData.usedPoints)), // 항상 양수로 저장
       });
 
       // 화면에서도 즉시 반영
@@ -199,15 +211,14 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
                     {/* ✅ 결제 금액이 양수면 정상 표시, 음수면 "-" */}
                     <td>
                       {order.payment < 0
-                        ? `-${
-                            order.usedPoints
-                              ? order.usedPoints.toLocaleString()
-                              : (
-                                  Math.abs(order.payment) * 0.02
-                                ).toLocaleString()
-                          }P`
-                        : `+${(order.payment * 0.02).toLocaleString()}P`}
-                    </td>{" "}
+                        ? `-${Math.abs(
+                            order.usedPoints ||
+                              Math.floor(Math.abs(order.payment) * 0.02)
+                          ).toLocaleString()}P`
+                        : `+${Math.floor(
+                            order.payment * 0.02
+                          ).toLocaleString()}P`}
+                    </td>
                     {/* ✅ 결제 금액이 양수면 +포인트, 음수면 -포인트 */}
                     {/* ✅ 결제 금액이 음수면 "-차감포인트" 표시, 양수면 "-" */}
                     <td>

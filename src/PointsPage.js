@@ -17,6 +17,12 @@ export function PointsPage() {
     return rawPhone.replace(/(\d{3})(\d{4})(\d{0,4})/, "$1-$2-$3");
   };
 
+  function parseDate(dateStr) {
+    // "2025.04.06" → [2025, 04, 06]
+    const [year, month, day] = dateStr.split(".");
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  }
+
   useEffect(() => {
     const fetchRemainingPoints = async () => {
       try {
@@ -46,6 +52,11 @@ export function PointsPage() {
           }
         });
 
+        // ✅ 날짜 문자열 안전하게 파싱해서 정렬
+        history.sort((a, b) => parseDate(a.date) - parseDate(b.date));
+
+        setRemainingPoints(totalEarnedPoints - totalUsedPoints);
+        setOrderHistory(history);
         setRemainingPoints(totalEarnedPoints - totalUsedPoints);
         setOrderHistory(history);
       } catch (error) {
@@ -63,7 +74,7 @@ export function PointsPage() {
         <div className="points-icon">
           <img src={`${process.env.PUBLIC_URL}/logo.jpeg`} alt="Logo" />
           <h1 className="points-title">
-            {formatPhoneNumber(phone)} 님, 안녕하세요!
+            {formatPhoneNumber(phone)}님, 안녕하세요!
           </h1>
         </div>
 
