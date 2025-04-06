@@ -2,12 +2,12 @@ import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./LoginPage";
 import { PointsPage } from "./PointsPage";
 import { SignupPage } from "./SignupPage";
-import AdminPage from "./AdminPage"; // default import 방식
+import AdminPage from "./AdminPage";
 import FindAccountPage from "./FindAccountPage";
 
 function App() {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
