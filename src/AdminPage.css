@@ -87,7 +87,7 @@ table {
 
 th,
 td {
-  padding: 12px;
+  padding: 10px 3px; /* 세로 10px, 가로 6px */
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
@@ -101,6 +101,7 @@ th {
 td {
   font-size: 1rem;
   color: #444;
+  width: 100px;
 }
 
 /* 로딩 중 상태 */
@@ -228,14 +229,6 @@ form label {
   margin-bottom: 5px;
 }
 
-form input {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
 form input:focus {
   border-color: #ffb6c1;
   outline: none;
@@ -262,8 +255,7 @@ form button[type="admin-submit"]:hover {
 }
 
 .react-datepicker__input-container input {
-  width: 100%;
-  padding: 10px;
+  width: 60%;
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -284,9 +276,8 @@ body {
 input,
 textarea,
 select {
-  font-size: 16px; /* 키패드 크기와 맞는 폰트 크기 */
-  line-height: 1.5;
-  width: 100%;
+  /* 키패드 크기와 맞는 폰트 크기 */
+  width: 60%;
 }
 
 @media (max-width: 600px) {

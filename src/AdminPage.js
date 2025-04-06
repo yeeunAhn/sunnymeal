@@ -340,10 +340,20 @@ function AdminPage() {
                       {calculateTotalPoints(editData.number).toLocaleString()} P
                     </td>
                     <td>
-                      <button onClick={() => handleSaveEdit(user.id)}>
-                        저장
-                      </button>
-                      <button onClick={() => setEditingId(null)}>취소</button>
+                      <div style={{ display: "flex" }}>
+                        <button
+                          style={{ whiteSpace: "nowrap" }}
+                          onClick={() => handleSaveEdit(user.id)}
+                        >
+                          저장
+                        </button>
+                        <button
+                          style={{ whiteSpace: "nowrap" }}
+                          onClick={() => setEditingId(null)}
+                        >
+                          취소
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ) : (
@@ -402,6 +412,7 @@ function AdminPage() {
               onChange={handleDateChange}
               dateFormat="yyyy.MM.dd"
               required
+              className="custom-input"
             />
           </div>
           <div>
@@ -412,6 +423,7 @@ function AdminPage() {
               value={formData.company}
               onChange={handleInputChange}
               required
+              className="custom-input"
             />
           </div>
           <div>
@@ -422,6 +434,7 @@ function AdminPage() {
               value={formData.name}
               onChange={handleInputChange}
               required
+              className="custom-input"
             />
           </div>
           <div>
@@ -432,6 +445,7 @@ function AdminPage() {
               value={formData.number}
               onChange={handleInputChange}
               required
+              className="custom-input"
             />
           </div>
           <div>
@@ -442,6 +456,7 @@ function AdminPage() {
               value={formData.payment}
               onChange={handleInputChange}
               required
+              className="custom-input"
             />
           </div>
           <button className="submit-order-btn" type="submit">
