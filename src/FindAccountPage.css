@@ -57,3 +57,7 @@
   cursor: pointer;
   width: 100%;
 }
+
+.findaccount-result {
+  margin-top: 20px;
+}

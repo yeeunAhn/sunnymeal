@@ -3,7 +3,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 85vh;
   padding: 20px;
 }
 
@@ -16,7 +15,6 @@
   text-align: center;
   width: 330px;
   overflow-y: auto;
-  margin-top: 30vh;
 }
 
 .points-icon img {

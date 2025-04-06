@@ -22,6 +22,14 @@ export function PointsPage() {
     const [year, month, day] = dateStr.split(".");
     return new Date(Number(year), Number(month) - 1, Number(day));
   }
+  //날짜정렬 최신순으로
+  function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  }
 
   useEffect(() => {
     const fetchRemainingPoints = async () => {
@@ -52,8 +60,7 @@ export function PointsPage() {
           }
         });
 
-        // ✅ 날짜 문자열 안전하게 파싱해서 정렬
-        history.sort((a, b) => parseDate(a.date) - parseDate(b.date));
+        history.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         setRemainingPoints(totalEarnedPoints - totalUsedPoints);
         setOrderHistory(history);
@@ -97,7 +104,7 @@ export function PointsPage() {
                 <p className="history-description">
                   {order.payment > 0 ? "결제 적립" : "포인트 사용"}
                 </p>
-                <p className="history-date">{order.date}</p>
+                <p className="history-date">{formatDate(order.date)}</p>
               </div>
               <p
                 className={`history-points ${

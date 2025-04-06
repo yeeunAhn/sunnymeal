@@ -109,13 +109,15 @@ export function LoginPage() {
             로그인
           </button>
 
-          <div className="login-options">
-            <span className="forgot-password" onClick={handleFindAccount}>
-              비밀번호 찾기
-            </span>
-          </div>
+          {/* 
+<div className="login-options">
+  <span className="forgot-password" onClick={handleFindAccount}>
+    비밀번호 찾기
+  </span>
+</div> 
+*/}
 
-          <span className="signup-link">not a member?</span>
+          <span className="signup-link">계정이 없으신가요?</span>
           <button type="button" className="signup-btn" onClick={handleSignUp}>
             회원가입
           </button>

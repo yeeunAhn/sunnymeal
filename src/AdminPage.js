@@ -16,7 +16,7 @@ import "./AdminPage.css";
 const formatDate = (date) => {
   const tzOffset = date.getTimezoneOffset() * 60000;
   const localDate = new Date(date.getTime() - tzOffset);
-  return localDate.toISOString().split("T")[0].replace(/-/g, ".");
+  return localDate.toISOString().split("T")[0]; // yyyy-mm-dd 형식
 };
 
 function AdminPage() {
@@ -60,6 +60,9 @@ function AdminPage() {
 
     fetchData();
   }, []);
+
+  //모바일에서도 날짜 제대로 보이게
+  const displayDate = (dateStr) => dateStr.replace(/-/g, ".");
 
   const toggleAddOrderForm = () => {
     setIsAddingOrder(!isAddingOrder);
@@ -105,7 +108,10 @@ function AdminPage() {
         };
 
         const docRef = await addDoc(collection(db, "point"), newOrder);
-        setUsers((prev) => [...prev, { id: docRef.id, ...newOrder }]);
+        setUsers((prev) => {
+          const updated = [...prev, { id: docRef.id, ...newOrder }];
+          return updated.sort((a, b) => new Date(b.date) - new Date(a.date));
+        });
 
         setIsAddingOrder(false);
         setFormData({
@@ -118,6 +124,7 @@ function AdminPage() {
       } catch (error) {
         console.error("주문 추가 중 오류 발생: ", error);
       }
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     [formData, setUsers]
   );
@@ -140,7 +147,11 @@ function AdminPage() {
       };
 
       const docRef = await addDoc(collection(db, "point"), newPointUsage);
-      setUsers((prev) => [...prev, { id: docRef.id, ...newPointUsage }]);
+      setUsers((prev) =>
+        [...prev, { id: docRef.id, ...newPointUsage }].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        )
+      );
 
       setIsUsingPoints(false);
       setPointData({
@@ -337,7 +348,8 @@ function AdminPage() {
                   </tr>
                 ) : (
                   <tr key={user.id}>
-                    <td>{user.date}</td>
+                    <td>{displayDate(user.date)}</td>
+
                     <td>{user.company || "-"}</td>
                     <td>{user.name || "-"}</td>
                     <td>{formatPhoneNumber(user.number)}</td>
