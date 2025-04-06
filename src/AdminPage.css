@@ -38,6 +38,38 @@ body {
   margin: 0 auto;
 }
 
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 10px 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  width: fit-content;
+}
+
+.search-section label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.search-section input {
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  width: 200px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-section input:focus {
+  border-color: #d5006d;
+}
+
 /* 헤더 스타일 */
 h1 {
   font-size: 2rem;

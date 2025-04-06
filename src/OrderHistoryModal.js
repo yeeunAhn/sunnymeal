@@ -71,13 +71,20 @@ function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
   const handleDateChange = (date) => {
     setEditFormData({ ...editFormData, date });
   };
+  // YYYY.MM.DD 형식으로 날짜 포맷 함수
+  const formatDateToKoreanStyle = (date) => {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+    return `${year}.${month}.${day}`;
+  };
 
   // Firestore에서 주문 업데이트
   const handleUpdateOrder = async () => {
     try {
       const orderRef = doc(db, "point", editingOrderId);
       await updateDoc(orderRef, {
-        date: editFormData.date.toLocaleDateString("ko-KR"),
+        date: formatDateToKoreanStyle(editFormData.date),
         company: editFormData.company,
         name: editFormData.name,
         payment: Number(editFormData.payment),
