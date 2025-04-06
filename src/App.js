@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./LoginPage";
 import { PointsPage } from "./PointsPage";
 import { SignupPage } from "./SignupPage";
 import AdminPage from "./AdminPage"; // default import 방식
-import FindAccountPage from ".FindAccountPage";
+import FindAccountPage from "./FindAccountPage";
 
 function App() {
   return (
