@@ -277,7 +277,7 @@ input,
 textarea,
 select {
   /* 키패드 크기와 맞는 폰트 크기 */
-  width: 60%;
+  width: 80%;
 }
 
 @media (max-width: 600px) {
