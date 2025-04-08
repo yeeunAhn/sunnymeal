@@ -17,7 +17,9 @@ export function SignupPage() {
   // 주석처리없는버전
   const handlePhoneChange = (e) => {
     const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
-    setPhone(rawPhone);
+    if (rawPhone.length <= 11) {
+      setPhone(rawPhone);
+    }
   };
 
   // 전화번호 입력 시 자동으로 하이픈 추가
@@ -117,7 +119,7 @@ export function SignupPage() {
         <form onSubmit={handleSignup} className="signup-form">
           <div className="input-group">
             <input
-              type="text"
+              type="tel"
               placeholder="전화번호 입력"
               value={phone}
               onChange={handlePhoneChange}
@@ -127,6 +129,8 @@ export function SignupPage() {
           <div className="input-group">
             <input
               type="password"
+              inputMode="numeric"
+              pattern="[0-9]*"
               placeholder="비밀번호 (숫자 6자리)"
               value={password}
               onChange={handlePasswordChange}
@@ -137,6 +141,8 @@ export function SignupPage() {
           <div className="input-group">
             <input
               type="password"
+              inputMode="numeric"
+              pattern="[0-9]*"
               placeholder="비밀번호 확인 (숫자 6자리)"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}

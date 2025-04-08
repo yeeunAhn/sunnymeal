@@ -12,7 +12,9 @@ export function LoginPage() {
   // 주석처리없는버전
   const handlePhoneChange = (e) => {
     const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
-    setPhone(rawPhone);
+    if (rawPhone.length <= 11) {
+      setPhone(rawPhone);
+    }
   };
 
   // 전화번호 입력 시 자동으로 하이픈 추가
@@ -45,7 +47,8 @@ export function LoginPage() {
   // };
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value); // 비밀번호 상태 업데이트
+    const onlyNumbers = e.target.value.replace(/\D/g, ""); // 숫자만 허용
+    setPassword(onlyNumbers);
   };
 
   const handleSubmit = async (e) => {
@@ -96,7 +99,7 @@ export function LoginPage() {
         <form onSubmit={handleSubmit} className="login-form">
           <div className="login-input-group">
             <input
-              type="text"
+              type="tel"
               placeholder="phone"
               value={phone}
               onChange={handlePhoneChange}
@@ -105,9 +108,12 @@ export function LoginPage() {
           <div className="login-input-group">
             <input
               type="password"
+              inputMode="numeric"
+              pattern="[0-9]*"
               placeholder="password"
               value={password}
               onChange={handlePasswordChange}
+              maxLength={6}
             />
           </div>
 
