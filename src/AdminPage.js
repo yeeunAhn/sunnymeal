@@ -11,6 +11,7 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./AdminPage.css";
+import { useNavigate } from "react-router-dom";
 
 // 날짜 포맷 함수
 const formatDate = (date) => {
@@ -25,6 +26,8 @@ function AdminPage() {
   const [editData, setEditData] = useState({});
   const [isAddingOrder, setIsAddingOrder] = useState(false);
   const [isUsingPoints, setIsUsingPoints] = useState(false);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     date: new Date(),
     company: "",
@@ -240,6 +243,9 @@ function AdminPage() {
   return (
     <div className="admin-container">
       <h1>주문 관리</h1>
+      <div className="top-right-buttons">
+        <button onClick={() => navigate("/members")}>회원관리</button>
+      </div>
 
       <div className="search-section">
         <label>전화번호 검색: </label>

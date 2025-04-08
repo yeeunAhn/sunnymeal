@@ -4,6 +4,7 @@ import { getFirestore, setDoc, doc } from "firebase/firestore"; // 필요한 함
 import { app } from "./firebase";
 import "./SignupPage.css"; // 개별 CSS 파일
 import { getDoc } from "firebase/firestore";
+import { format } from "date-fns";
 
 export function SignupPage() {
   const [phone, setPhone] = useState("");
@@ -13,43 +14,51 @@ export function SignupPage() {
 
   const db = getFirestore(app); // Firestore 인스턴스를 가져옵니다.
 
-  // 전화번호 입력 시 자동으로 하이픈 추가
+  // 주석처리없는버전
   const handlePhoneChange = (e) => {
     const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
-    let formattedPhone = "";
-
-    if (rawPhone.length <= 3) {
-      formattedPhone = rawPhone;
-    } else if (rawPhone.length <= 6) {
-      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(3)}`;
-    } else if (rawPhone.length <= 10) {
-      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
-        3,
-        7
-      )}-${rawPhone.slice(7)}`;
-    } else {
-      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
-        3,
-        7
-      )}-${rawPhone.slice(7, 11)}`;
-    }
-
-    // 기존 입력 값보다 길이가 짧아지는 경우(즉, 백스페이스 사용 시)는 그냥 rawPhone을 그대로 사용
-    if (e.target.value.length < phone.length) {
-      setPhone(e.target.value);
-    } else {
-      setPhone(formattedPhone);
-    }
+    setPhone(rawPhone);
   };
 
-  // 비밀번호 입력 처리
+  // 전화번호 입력 시 자동으로 하이픈 추가
+  // const handlePhoneChange = (e) => {
+  //   const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
+  //   let formattedPhone = "";
+
+  //   if (rawPhone.length <= 3) {
+  //     formattedPhone = rawPhone;
+  //   } else if (rawPhone.length <= 6) {
+  //     formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(3)}`;
+  //   } else if (rawPhone.length <= 10) {
+  //     formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+  //       3,
+  //       7
+  //     )}-${rawPhone.slice(7)}`;
+  //   } else {
+  //     formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+  //       3,
+  //       7
+  //     )}-${rawPhone.slice(7, 11)}`;
+  //   }
+
+  //   // 기존 입력 값보다 길이가 짧아지는 경우(즉, 백스페이스 사용 시)는 그냥 rawPhone을 그대로 사용
+  //   if (e.target.value.length < phone.length) {
+  //     setPhone(e.target.value);
+  //   } else {
+  //     setPhone(formattedPhone);
+  //   }
+  // };
+
+  // 비밀번호 입력 처리 (숫자만 허용)
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    const onlyNumbers = e.target.value.replace(/\D/g, ""); // 숫자 이외 제거
+    setPassword(onlyNumbers);
   };
 
-  // 비밀번호 확인 입력 처리
+  // 비밀번호 확인 입력 처리 (숫자만 허용)
   const handleConfirmPasswordChange = (e) => {
-    setConfirmPassword(e.target.value);
+    const onlyNumbers = e.target.value.replace(/\D/g, ""); // 숫자 이외 제거
+    setConfirmPassword(onlyNumbers);
   };
 
   // 회원가입 버튼 클릭 시 실행
@@ -84,6 +93,7 @@ export function SignupPage() {
       await setDoc(userRef, {
         phone: trimmedPhone,
         password: password,
+        signupDate: format(new Date(), "yyyy-MM-dd HH:mm:ss"),
       });
 
       alert("회원가입이 완료되었습니다!");
@@ -117,7 +127,7 @@ export function SignupPage() {
           <div className="input-group">
             <input
               type="password"
-              placeholder="비밀번호 (6자리)"
+              placeholder="비밀번호 (숫자 6자리)"
               value={password}
               onChange={handlePasswordChange}
               className="signup-input"
@@ -127,7 +137,7 @@ export function SignupPage() {
           <div className="input-group">
             <input
               type="password"
-              placeholder="비밀번호 확인 (6자리)"
+              placeholder="비밀번호 확인 (숫자 6자리)"
               value={confirmPassword}
               onChange={handleConfirmPasswordChange}
               className="signup-input"

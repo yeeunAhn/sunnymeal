@@ -286,3 +286,23 @@ select {
     padding-bottom: 20px; /* 화면 하단 여백 추가 */
   }
 }
+
+.top-right-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.top-right-buttons button {
+  padding: 8px 12px;
+  font-size: 14px;
+  background-color: #d5006d;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.top-right-buttons button:hover {
+  background-color: #d5006d;
+}

@@ -9,34 +9,40 @@ export function LoginPage() {
   const [password, setPassword] = useState(""); // 비밀번호 상태 추가
   const navigate = useNavigate();
 
-  // 전화번호 입력 시 자동으로 하이픈 추가
+  // 주석처리없는버전
   const handlePhoneChange = (e) => {
     const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
-    let formattedPhone = "";
-
-    if (rawPhone.length <= 3) {
-      formattedPhone = rawPhone;
-    } else if (rawPhone.length <= 6) {
-      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(3)}`;
-    } else if (rawPhone.length <= 10) {
-      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
-        3,
-        7
-      )}-${rawPhone.slice(7)}`;
-    } else {
-      formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
-        3,
-        7
-      )}-${rawPhone.slice(7, 11)}`;
-    }
-
-    // 기존 입력 값보다 길이가 짧아지는 경우(즉, 백스페이스 사용 시)는 그냥 rawPhone을 그대로 사용
-    if (e.target.value.length < phone.length) {
-      setPhone(e.target.value);
-    } else {
-      setPhone(formattedPhone);
-    }
+    setPhone(rawPhone);
   };
+
+  // 전화번호 입력 시 자동으로 하이픈 추가
+  // const handlePhoneChange = (e) => {
+  //   const rawPhone = e.target.value.replace(/\D/g, ""); // 숫자만 남기기
+  //   let formattedPhone = "";
+
+  //   if (rawPhone.length <= 3) {
+  //     formattedPhone = rawPhone;
+  //   } else if (rawPhone.length <= 6) {
+  //     formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(3)}`;
+  //   } else if (rawPhone.length <= 10) {
+  //     formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+  //       3,
+  //       7
+  //     )}-${rawPhone.slice(7)}`;
+  //   } else {
+  //     formattedPhone = `${rawPhone.slice(0, 3)}-${rawPhone.slice(
+  //       3,
+  //       7
+  //     )}-${rawPhone.slice(7, 11)}`;
+  //   }
+
+  //   // 기존 입력 값보다 길이가 짧아지는 경우(즉, 백스페이스 사용 시)는 그냥 rawPhone을 그대로 사용
+  //   if (e.target.value.length < phone.length) {
+  //     setPhone(e.target.value);
+  //   } else {
+  //     setPhone(formattedPhone);
+  //   }
+  // };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value); // 비밀번호 상태 업데이트
@@ -109,13 +115,11 @@ export function LoginPage() {
             로그인
           </button>
 
-          {/* 
-<div className="login-options">
-  <span className="forgot-password" onClick={handleFindAccount}>
-    비밀번호 찾기
-  </span>
-</div> 
-*/}
+          <div className="login-options">
+            <span className="forgot-password" onClick={handleFindAccount}>
+              비밀번호 찾기
+            </span>
+          </div>
 
           <span className="signup-link">계정이 없으신가요?</span>
           <button type="button" className="signup-btn" onClick={handleSignUp}>
