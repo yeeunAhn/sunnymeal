@@ -13,6 +13,18 @@
   width: 330px;
   text-align: center;
 }
+.notice-banner {
+  background-color: #f0f8ff;
+  border: 2px solid #a2c4f2;
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin: 20px 0;
+  text-align: center;
+  color: #2a4d8f;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
 
 .login-icon img {
   width: 150px; /* 로고 크기 조정 */

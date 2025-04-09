@@ -55,7 +55,7 @@ export function LoginPage() {
     e.preventDefault();
     const trimmedPhone = phone.replace(/-/g, "").trim(); // 하이픈 제거 후 전화번호 처리
 
-    if (trimmedPhone === "0235") {
+    if (trimmedPhone === "02350509") {
       navigate("/admin"); // 특정 번호는 관리자 페이지로 이동
     } else if (trimmedPhone.length === 10 || trimmedPhone.length === 11) {
       // Firestore에서 users 컬렉션 검색
