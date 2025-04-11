@@ -12,6 +12,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./AdminPage.css";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 // 날짜 포맷 함수
 const formatDate = (date) => {
@@ -132,6 +134,7 @@ function AdminPage() {
     [formData, setUsers]
   );
 
+  //포인트 사용
   const handleUsePoints = async (e) => {
     e.preventDefault();
     const { date, number, usedPoints } = pointData;
@@ -234,6 +237,33 @@ function AdminPage() {
     );
   };
 
+  const handleDownloadExcel = () => {
+    const dataForExcel = filteredUsers.map((user) => ({
+      주문일: displayDate(user.date),
+      상호명: user.company || "-",
+      이름: user.name || "-",
+      전화번호: formatPhoneNumber(user.number),
+      결제금액: user.payment >= 0 ? user.payment : "-",
+      사용포인트: user.payment < 0 ? -user.payment / 50 : "-",
+      누적포인트: calculateTotalPoints(user.number),
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "주문 내역");
+
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    saveAs(blob, `주문내역_${formatDate(new Date())}.xlsx`);
+  };
+
   const filteredUsers = searchNumber
     ? users.filter((u) =>
         u.number?.replace(/\D/g, "").includes(searchNumber.replace(/\D/g, ""))
@@ -243,8 +273,10 @@ function AdminPage() {
   return (
     <div className="admin-container">
       <h1>주문 관리</h1>
+
       <div className="top-right-buttons">
         <button onClick={() => navigate("/members")}>회원관리</button>
+        <button onClick={handleDownloadExcel}>엑셀 다운로드</button>
       </div>
 
       <div className="search-section">
