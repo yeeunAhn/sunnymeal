@@ -276,7 +276,9 @@ function AdminPage() {
 
       <div className="top-right-buttons">
         <button onClick={() => navigate("/members")}>회원관리</button>
-        <button onClick={handleDownloadExcel}>엑셀 다운로드</button>
+        <button onClick={handleDownloadExcel} style={{ marginLeft: "8px" }}>
+          엑셀 다운로드
+        </button>
       </div>
 
       <div className="search-section">
