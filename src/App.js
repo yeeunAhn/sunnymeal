@@ -1,6 +1,4 @@
-// App.js
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import PointsPage from "./PointsPage";
 import SignupPage from "./SignupPage";
