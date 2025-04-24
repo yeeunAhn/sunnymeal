@@ -1,7 +1,7 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import LoginPage from "./LoginPage";
-import PointsPage from "./PointsPage";
-import SignupPage from "./SignupPage";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { LoginPage } from "./LoginPage";
+import { PointsPage } from "./PointsPage";
+import { SignupPage } from "./SignupPage";
 import AdminPage from "./AdminPage";
 import FindAccountPage from "./FindAccountPage";
 import MemberPage from "./MemberPage";
