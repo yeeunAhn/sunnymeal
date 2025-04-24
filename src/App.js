@@ -8,7 +8,7 @@ import MemberPage from "./MemberPage";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
@@ -17,7 +17,7 @@ function App() {
         <Route path="/findaccount" element={<FindAccountPage />} />
         <Route path="/members" element={<MemberPage />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 
