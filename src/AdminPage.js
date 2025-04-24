@@ -545,4 +545,4 @@ function AdminPage() {
     </div>
   );
 }
-export default LoginPage;
+export default AdminPage;

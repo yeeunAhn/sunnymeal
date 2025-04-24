@@ -122,4 +122,4 @@ function PointsPage() {
     </div>
   );
 }
-export default LoginPage;
+export default PointsPage;
