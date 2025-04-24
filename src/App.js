@@ -1,6 +1,4 @@
-// App.js
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./LoginPage";
 import { PointsPage } from "./PointsPage";
 import { SignupPage } from "./SignupPage";
@@ -10,7 +8,7 @@ import MemberPage from "./MemberPage";
 
 function App() {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
