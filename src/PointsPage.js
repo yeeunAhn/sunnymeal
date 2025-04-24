@@ -4,7 +4,7 @@ import { db } from "./firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import "./PointsPage.css";
 
-function PointsPage() {
+export function PointsPage() {
   const { phone } = useParams(); // URL에서 phone 파라미터 추출
   const [remainingPoints, setRemainingPoints] = useState(null);
   const [orderHistory, setOrderHistory] = useState([]);
