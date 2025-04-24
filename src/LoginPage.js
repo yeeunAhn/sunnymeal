@@ -4,7 +4,7 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "./firebase"; // Firebase 설정 파일
 import "./LoginPage.css"; // 개별 CSS 파일
 
-function LoginPage() {
+export function LoginPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState(""); // 비밀번호 상태 추가
   const navigate = useNavigate();
@@ -136,4 +136,3 @@ function LoginPage() {
     </div>
   );
 }
-export default LoginPage;
