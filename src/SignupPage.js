@@ -6,7 +6,7 @@ import "./SignupPage.css"; // 개별 CSS 파일
 import { getDoc } from "firebase/firestore";
 import { format } from "date-fns";
 
-export function SignupPage() {
+function SignupPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 추가
@@ -158,3 +158,4 @@ export function SignupPage() {
     </div>
   );
 }
+export default SignupPage;
