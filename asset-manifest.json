@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/sunnymeal/static/css/main.0c930f10.css",
-    "main.js": "/sunnymeal/static/js/main.dfb77726.js",
-    "static/js/453.5798eaf1.chunk.js": "/sunnymeal/static/js/453.5798eaf1.chunk.js",
-    "index.html": "/sunnymeal/index.html",
-    "main.0c930f10.css.map": "/sunnymeal/static/css/main.0c930f10.css.map",
-    "main.dfb77726.js.map": "/sunnymeal/static/js/main.dfb77726.js.map",
-    "453.5798eaf1.chunk.js.map": "/sunnymeal/static/js/453.5798eaf1.chunk.js.map"
+    "main.css": "/static/css/main.0c930f10.css",
+    "main.js": "/static/js/main.62c2bc50.js",
+    "static/js/453.5798eaf1.chunk.js": "/static/js/453.5798eaf1.chunk.js",
+    "index.html": "/index.html",
+    "main.0c930f10.css.map": "/static/css/main.0c930f10.css.map",
+    "main.62c2bc50.js.map": "/static/js/main.62c2bc50.js.map",
+    "453.5798eaf1.chunk.js.map": "/static/js/453.5798eaf1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0c930f10.css",
-    "static/js/main.dfb77726.js"
+    "static/js/main.62c2bc50.js"
   ]
 }
