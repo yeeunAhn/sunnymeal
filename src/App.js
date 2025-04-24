@@ -1,15 +1,16 @@
+// App.js
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { LoginPage } from "./LoginPage";
-import { PointsPage } from "./PointsPage";
-import { SignupPage } from "./SignupPage";
+
+import LoginPage from "./LoginPage";
+import PointsPage from "./PointsPage";
+import SignupPage from "./SignupPage";
 import AdminPage from "./AdminPage";
 import FindAccountPage from "./FindAccountPage";
 import MemberPage from "./MemberPage";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
@@ -18,7 +19,7 @@ function App() {
         <Route path="/findaccount" element={<FindAccountPage />} />
         <Route path="/members" element={<MemberPage />} />
       </Routes>
-    </BrowserRouter>
+    </Router>
   );
 }
 
