@@ -1,7 +1,7 @@
 import React from "react";
 import "./FindAccountPage.css";
 
-function FindAccountPage() {
+export function FindAccountPage() {
   return (
     <div className="findaccount-container">
       <div className="findaccount-box">

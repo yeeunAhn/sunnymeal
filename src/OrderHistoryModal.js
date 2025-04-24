@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./OrderHistoryModal.css";
 
-function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
+export function OrderHistoryModal({ phoneNumber, users, setUsers, onClose }) {
   const parseKoreanDate = (dateString) => {
     if (typeof dateString === "string") {
       // "2025. 4. 3." 또는 "2025.04.03." 형태

@@ -9,7 +9,7 @@ import {
 import { db } from "./firebase";
 import "./MemberPage.css";
 
-const MemberPage = () => {
+export const MemberPage = () => {
   const [users, setUsers] = useState([]);
   const [editUserId, setEditUserId] = useState(null);
   const [newPassword, setNewPassword] = useState("");
