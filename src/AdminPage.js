@@ -22,7 +22,7 @@ const formatDate = (date) => {
   return localDate.toISOString().split("T")[0]; // yyyy-mm-dd 형식
 };
 
-export function AdminPage() {
+function AdminPage() {
   const [users, setUsers] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
@@ -545,3 +545,4 @@ export function AdminPage() {
     </div>
   );
 }
+export default LoginPage;
