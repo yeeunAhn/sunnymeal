@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+mport { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginPage } from "./LoginPage";
 import { PointsPage } from "./PointsPage";
 import { SignupPage } from "./SignupPage";
@@ -8,7 +8,7 @@ import MemberPage from "./MemberPage";
 
 function App() {
   return (
-    <HashRouter basename={process.env.PUBLIC_URL}>
+    <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
@@ -17,7 +17,7 @@ function App() {
         <Route path="/findaccount" element={<FindAccountPage />} />
         <Route path="/members" element={<MemberPage />} />
       </Routes>
-    </HashRouter>
+    </Router>
   );
 }
 
