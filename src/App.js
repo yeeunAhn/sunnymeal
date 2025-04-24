@@ -1,14 +1,16 @@
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import { LoginPage } from "./LoginPage";
-import { PointsPage } from "./PointsPage";
-import { SignupPage } from "./SignupPage";
+// App.js
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import LoginPage from "./LoginPage";
+import PointsPage from "./PointsPage";
+import SignupPage from "./SignupPage";
 import AdminPage from "./AdminPage";
 import FindAccountPage from "./FindAccountPage";
 import MemberPage from "./MemberPage";
 
 function App() {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/points/:phone" element={<PointsPage />} />
