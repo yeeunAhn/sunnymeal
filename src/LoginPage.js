@@ -110,7 +110,7 @@ export function LoginPage() {
               type="password"
               inputMode="numeric"
               pattern="[0-9]*"
-              placeholder="password"
+              placeholder="password(숫자 6자리)"
               value={password}
               onChange={handlePasswordChange}
               maxLength={6}
