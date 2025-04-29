@@ -94,9 +94,20 @@ export function PointsPage() {
               : "로딩 중..."}
           </p>
         </div>
+        {/* 포인트 구매하기 배너/버튼 추가 */}
+        <a
+          href="https://smartstore.naver.com/sunnym114"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="purchase-banner"
+        >
+          💰 포인트 사용하기 💰
+          <span className="small-text">(10만포인트 이상 사용가능)</span>
+        </a>
 
         {/* 적립/사용 내역 */}
         <h2 className="points-history-title">적립/사용내역</h2>
+
         <div className="points-history">
           {orderHistory.map((order, index) => (
             <div key={index} className="history-item">

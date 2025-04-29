@@ -76,6 +76,27 @@
 /* 적립/사용 내역 리스트 */
 .points-history {
   margin-top: 10px;
+  background-color: #fafafa;
+  padding: 15px;
+  border-radius: 20px;
+}
+
+.purchase-banner {
+  display: block;
+  padding: 12px 20px;
+  background-color: #d5006d;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 20px;
+  font-size: 20px;
+  transition: background-color 0.3s;
+}
+.small-text {
+  display: block; /* 줄바꿈 */
+  font-size: 14px; /* 작게 */
+  font-weight: normal; /* 굵기 보통 */
 }
 
 .history-item {
